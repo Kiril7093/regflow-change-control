@@ -1,0 +1,37 @@
+# Secrets / env
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+
+# Virtualenv
+.venv/
+venv/
+
+# Django / local data
+*.sqlite3
+db.sqlite3
+media/
+
+# Static collected (if/when we run collectstatic)
+staticfiles/
+
+# Logs
+*.log
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# Misc
+*.swp
+regflow_stage0.zip

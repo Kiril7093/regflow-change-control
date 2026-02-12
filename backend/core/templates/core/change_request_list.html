@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>RegFlow — Change Requests</title>
+  </head>
+  <body>
+    <h1>Change Requests</h1>
+
+    <p>
+      <a href="/change-requests/new/">+ New Change Request</a>
+      |
+      <a href="/admin/">Admin</a>
+      |
+      <form method="post" action="/accounts/logout/" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit">Log out</button>
+      </form>
+    </p>
+
+    {% if change_requests %}
+      <ul>
+        {% for cr in change_requests %}
+          <li>
+            <strong>CR#{{ cr.id }}</strong> —
+            <a href="/change-requests/{{ cr.id }}/">{{ cr.title }}</a>
+            ({{ cr.get_change_type_display }}, {{ cr.get_status_display }})
+            — by {{ cr.created_by.username }} at {{ cr.created_at }}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No change requests yet.</p>
+    {% endif %}
+  </body>
+</html>

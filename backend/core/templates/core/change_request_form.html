@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>RegFlow — {% if mode == "edit" %}Edit{% else %}New{% endif %} Change Request</title>
+  </head>
+  <body>
+    <h1>{% if mode == "edit" %}Edit{% else %}New{% endif %} Change Request</h1>
+
+    <p>
+      {% if mode == "edit" %}
+        <a href="/change-requests/{{ cr.id }}/">← Back to detail</a>
+      {% else %}
+        <a href="/change-requests/">← Back to list</a>
+      {% endif %}
+    </p>
+
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">{% if mode == "edit" %}Save{% else %}Create{% endif %}</button>
+    </form>
+  </body>
+</html>

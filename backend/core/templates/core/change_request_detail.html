@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>RegFlow — Change Request {{ cr.id }}</title>
+  </head>
+  <body>
+    <p>
+      <a href="/change-requests/">← Back to list</a>
+      |
+      <a href="/change-requests/{{ cr.id }}/pdf/" target="_blank">View PDF</a>
+
+      {% if cr.status == "draft" %}
+        |
+        <a href="/change-requests/{{ cr.id }}/edit/">Edit</a>
+        |
+        <form method="post" action="/change-requests/{{ cr.id }}/submit/" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit">Submit for review</button>
+        </form>
+      {% elif cr.status == "in_review" %}
+        |
+        <form method="post" action="/change-requests/{{ cr.id }}/approve/" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit">Approve</button>
+        </form>
+        |
+        <form method="post" action="/change-requests/{{ cr.id }}/reject/" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit">Reject</button>
+        </form>
+      {% endif %}
+    </p>
+
+    <h1>CR#{{ cr.id }} — {{ cr.title }}</h1>
+
+    <ul>
+      <li><strong>Status:</strong> {{ cr.get_status_display }}</li>
+      <li><strong>Type:</strong> {{ cr.get_change_type_display }}</li>
+      <li><strong>Created by:</strong> {{ cr.created_by.username }}</li>
+      <li><strong>Created at:</strong> {{ cr.created_at }}</li>
+      <li><strong>Updated at:</strong> {{ cr.updated_at }}</li>
+    </ul>
+
+    <h2>Rationale</h2>
+    <pre style="white-space: pre-wrap;">{{ cr.rationale|default:"(none)" }}</pre>
+
+    <h2>Audit trail</h2>
+    {% if events %}
+      <ul>
+        {% for e in events %}
+          <li>
+            {{ e.created_at }} — <strong>{{ e.get_event_type_display }}</strong>
+            by {{ e.actor.username }}{% if e.message %}: {{ e.message }}{% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No audit events yet.</p>
+    {% endif %}
+  </body>
+</html>
