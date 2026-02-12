@@ -8,3 +8,6 @@ gunicorn>=21.2
 ruff>=0.5
 pytest>=8.0
 pytest-django>=4.8
+
+reportlab
+pillow
