@@ -1,14 +1,15 @@
 from django.urls import path
+
 from .views import (
-    home,
-    change_request_list,
+    change_request_approve,
     change_request_create,
     change_request_detail,
     change_request_edit,
-    change_request_submit,
-    change_request_approve,
-    change_request_reject,
+    change_request_list,
     change_request_pdf,
+    change_request_reject,
+    change_request_submit,
+    home,
 )
 
 urlpatterns = [
