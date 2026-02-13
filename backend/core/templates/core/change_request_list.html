@@ -1,36 +1,56 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>RegFlow — Change Requests</title>
-  </head>
-  <body>
-    <h1>Change Requests</h1>
+{% extends "core/base.html" %}
 
-    <p>
-      <a href="/change-requests/new/">+ New Change Request</a>
-      |
-      <a href="/admin/">Admin</a>
-      |
-      <form method="post" action="/accounts/logout/" style="display:inline;">
-        {% csrf_token %}
-        <button type="submit">Log out</button>
-      </form>
-    </p>
+{% block title %}Change Requests · RegFlow{% endblock %}
 
-    {% if change_requests %}
-      <ul>
-        {% for cr in change_requests %}
-          <li>
-            <strong>CR#{{ cr.id }}</strong> —
-            <a href="/change-requests/{{ cr.id }}/">{{ cr.title }}</a>
-            ({{ cr.get_change_type_display }}, {{ cr.get_status_display }})
-            — by {{ cr.created_by.username }} at {{ cr.created_at }}
-          </li>
-        {% endfor %}
-      </ul>
-    {% else %}
-      <p>No change requests yet.</p>
-    {% endif %}
-  </body>
-</html>
+{% block content %}
+  <div class="header">
+    <div>
+      <h1 class="h1">Change Requests</h1>
+      <div class="muted">Draft → In review → Approved / Rejected</div>
+    </div>
+
+    <div class="actions">
+      <a class="btn" href="/admin/">Admin</a>
+      <a class="btn primary" href="/change-requests/new/">+ New change request</a>
+    </div>
+  </div>
+
+  <div class="card card--table">
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="col-id">ID</th>
+            <th>Title</th>
+            <th class="col-type">Type</th>
+            <th class="col-status">Status</th>
+            <th class="col-user">Created by</th>
+            <th class="col-updated">Updated</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for cr in change_requests %}
+            <tr>
+              <td class="muted">CR#{{ cr.id }}</td>
+              <td>
+                <a class="link-plain" href="/change-requests/{{ cr.id }}/">
+                  <strong>{{ cr.title }}</strong>
+                </a>
+              </td>
+              <td class="muted">{{ cr.get_change_type_display }}</td>
+              <td><span class="status {{ cr.status }}">{{ cr.get_status_display }}</span></td>
+              <td class="muted">{{ cr.created_by.username }}</td>
+              <td class="muted">{{ cr.updated_at|date:"M j, Y g:i A" }}</td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="6" class="muted empty">
+                No change requests yet. Click <strong>New change request</strong>.
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}
