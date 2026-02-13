@@ -1,24 +1,80 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>RegFlow — {% if mode == "edit" %}Edit{% else %}New{% endif %} Change Request</title>
-  </head>
-  <body>
-    <h1>{% if mode == "edit" %}Edit{% else %}New{% endif %} Change Request</h1>
+{% extends "core/base.html" %}
 
-    <p>
-      {% if mode == "edit" %}
-        <a href="/change-requests/{{ cr.id }}/">← Back to detail</a>
-      {% else %}
-        <a href="/change-requests/">← Back to list</a>
+{% block title %}
+  {% if cr %}Edit CR#{{ cr.id }} · RegFlow{% else %}New Change Request · RegFlow{% endif %}
+{% endblock %}
+
+{% block content %}
+  <div class="row between" style="gap:12px; margin-bottom:12px;">
+    <div>
+      <h1 class="h1" style="margin:0;">
+        {% if cr %}Edit CR#{{ cr.id }}{% else %}New Change Request{% endif %}
+      </h1>
+      <div class="muted" style="margin-top:6px;">
+        {% if cr %}
+          Status: <span class="badge {{ cr.status }}">{{ cr.get_status_display }}</span>
+          {% if cr.status != "draft" %}
+            · This record is locked (not Draft).
+          {% endif %}
+        {% else %}
+          Create a Draft change request. You can edit it until you submit it for review.
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="row" style="gap:10px;">
+      <a class="btn" href="/change-requests/">← Back</a>
+      {% if cr %}
+        <a class="btn" href="/change-requests/{{ cr.id }}/">View</a>
       {% endif %}
-    </p>
+    </div>
+  </div>
 
-    <form method="post">
+  <div class="card">
+    <form method="post" novalidate>
       {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit">{% if mode == "edit" %}Save{% else %}Create{% endif %}</button>
+
+      {% if form.non_field_errors %}
+        <div class="card" style="border-color:#ff3b30;">
+          <div class="muted">{{ form.non_field_errors }}</div>
+        </div>
+      {% endif %}
+
+      <div class="grid" style="grid-template-columns:1fr 1fr;">
+        <div>
+          <label class="label" for="{{ form.title.id_for_label }}">Title</label>
+          {{ form.title }}
+          {% if form.title.errors %}<div class="muted" style="color:#ff3b30;">{{ form.title.errors|striptags }}</div>{% endif %}
+        </div>
+
+        <div>
+          <label class="label" for="{{ form.change_type.id_for_label }}">Change type</label>
+          {{ form.change_type }}
+          {% if form.change_type.errors %}<div class="muted" style="color:#ff3b30;">{{ form.change_type.errors|striptags }}</div>{% endif %}
+        </div>
+      </div>
+
+      <div style="margin-top:12px;">
+        <label class="label" for="{{ form.rationale.id_for_label }}">Rationale</label>
+        {{ form.rationale }}
+        <div class="muted" style="margin-top:6px;">Tip: explain the reason, risk, and expected impact in 2–5 sentences.</div>
+        {% if form.rationale.errors %}<div class="muted" style="color:#ff3b30;">{{ form.rationale.errors|striptags }}</div>{% endif %}
+      </div>
+
+      <div class="row" style="gap:10px; margin-top:14px;">
+        <button class="btn primary" type="submit">
+          {% if cr %}Save changes{% else %}Create draft{% endif %}
+        </button>
+        <a class="btn" href="/change-requests/">Cancel</a>
+      </div>
     </form>
-  </body>
-</html>
+  </div>
+
+  <script>
+    // add basic classes to Django form widgets (no JS framework)
+    // works even if Django renders plain <input>/<select>/<textarea>
+    document.querySelectorAll("input[type=text], input[type=email], input[type=password]").forEach(el => el.classList.add("input"));
+    document.querySelectorAll("select").forEach(el => el.classList.add("input"));
+    document.querySelectorAll("textarea").forEach(el => el.classList.add("input"));
+  </script>
+{% endblock %}

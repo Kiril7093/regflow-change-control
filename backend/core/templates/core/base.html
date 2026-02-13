@@ -1,0 +1,33 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{% block title %}RegFlow{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'core/app.css' %}">
+  </head>
+  <body>
+    <header class="nav">
+      <div class="left">
+        <span class="brand">RegFlow</span>
+        <span class="badge">Change Control MVP</span>
+        <a class="btn" href="/">Home</a>
+        <a class="btn" href="/change-requests/">Change Requests</a>
+        <a class="btn" href="/admin/">Admin</a>
+      </div>
+      <div class="right">
+        {% if user.is_authenticated %}
+          <span class="muted">Signed in as <strong>{{ user.username }}</strong></span>
+          <a class="btn" href="/accounts/logout/">Logout</a>
+        {% else %}
+          <a class="btn primary" href="/accounts/login/">Login</a>
+        {% endif %}
+      </div>
+    </header>
+
+    <main class="container">
+      {% block content %}{% endblock %}
+    </main>
+  </body>
+</html>

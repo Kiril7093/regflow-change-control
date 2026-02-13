@@ -1,23 +1,21 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>RegFlow</title>
-  </head>
-  <body>
-    <h1>RegFlow</h1>
-    <p>
-      A minimal regulated workflow demo:
-      <strong>Create → Edit Draft → Submit → Approve/Reject → Audit Trail → PDF Export</strong>
+{% extends "core/base.html" %}
+
+{% block title %}RegFlow{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <h1 class="h1">RegFlow</h1>
+    <p class="muted">
+      A minimal regulated workflow demo: Create → Edit Draft → Submit → Approve/Reject → Audit Trail → PDF Export
     </p>
 
-    <ul>
-      <li><a href="/change-requests/">Open Change Requests</a></li>
-      <li><a href="/admin/">Admin</a></li>
-    </ul>
+    <div class="row" style="margin-top:14px;">
+      <a class="btn primary" href="/change-requests/">Open Change Requests</a>
+      <a class="btn" href="/admin/">Admin</a>
+    </div>
 
-    <p>
+    <p class="muted" style="margin-top:14px;">
       Tip: create a Draft, submit it for review, approve it, then export the PDF package.
     </p>
-  </body>
-</html>
+  </div>
+{% endblock %}
