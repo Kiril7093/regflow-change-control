@@ -35,3 +35,13 @@ staticfiles/
 # Misc
 *.swp
 regflow_stage0.zip
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Django local dev
+db.sqlite3
+backend/db.sqlite3
+backend/staticfiles/
