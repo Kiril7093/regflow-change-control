@@ -1,12 +1,62 @@
 {% extends "core/base.html" %}
 
-{% block title %}Change Requests · RegFlow{% endblock %}
+{% block title %}Change Requests · RegFlow
+<script>
+(function(){
+  const q = document.getElementById("cr-search");
+  const chips = Array.from(document.querySelectorAll(".chip"));
+  const rows = Array.from(document.querySelectorAll("tbody tr.rowlink"));
+
+  function norm(x){ return (x || "").toLowerCase(); }
+
+  function apply(){
+    const query = norm(q && q.value);
+    const active = document.querySelector(".chip.active");
+    const status = active ? norm(active.getAttribute("data-status")) : "all";
+
+    rows.forEach((tr) => {
+      const text = norm(tr.innerText);
+      // Status is in the pill cell; innerText contains it, so we can match it simply:
+      const statusOk = (status === "all") || text.includes(status);
+      const queryOk = (!query) || text.includes(query);
+      tr.style.display = (statusOk && queryOk) ? "" : "none";
+    });
+  }
+
+  if (q) {
+    q.addEventListener("input", apply);
+  }
+  chips.forEach((c) => {
+    c.addEventListener("click", () => {
+      chips.forEach(x => x.classList.remove("active"));
+      c.classList.add("active");
+      apply();
+    });
+  });
+
+  apply();
+})();
+</script>
+
+{% endblock %}
 
 {% block content %}
   <div class="header">
     <div>
       <h1 class="h1">Change Requests</h1>
       <div class="muted">Draft → In review → Approved / Rejected</div>
+
+      <div class="filters">
+        <input id="cr-search" class="input" type="search" placeholder="Search change requests…" autocomplete="off" />
+        <div class="chips" role="group" aria-label="Status filter">
+          <button class="chip active" data-status="all" type="button">All</button>
+          <button class="chip" data-status="draft" type="button">Draft</button>
+          <button class="chip" data-status="in review" type="button">In review</button>
+          <button class="chip" data-status="approved" type="button">Approved</button>
+          <button class="chip" data-status="rejected" type="button">Rejected</button>
+        </div>
+      </div>
+
     </div>
 
     <div class="actions">

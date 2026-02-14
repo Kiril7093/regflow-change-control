@@ -264,3 +264,64 @@ tr.rowlink:active td{ background: rgba(110,168,255,.06); }
 @media (min-width: 1200px){
   .container{ padding-left: 22px; padding-right: 22px; }
 }
+
+/* --- filters (search + status chips) --- */
+.filters{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap;
+  margin: 10px 0 14px;
+}
+
+.input{
+  width: 320px;
+  max-width: 100%;
+  padding: 9px 12px;
+  border-radius: 12px;
+  border:1px solid rgba(34,48,92,.95);
+  background: rgba(255,255,255,.03);
+  color: var(--text);
+  outline: none;
+}
+
+.input::placeholder{ color: rgba(231,236,255,.55); }
+
+.input:focus{
+  border-color: rgba(110,168,255,.55);
+  box-shadow: 0 0 0 3px rgba(110,168,255,.12);
+}
+
+.chips{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.chip{
+  display:inline-flex;
+  align-items:center;
+  padding: 7px 10px;
+  border-radius: 999px;
+  border:1px solid rgba(34,48,92,.95);
+  background: rgba(255,255,255,.03);
+  color: var(--muted);
+  cursor:pointer;
+  font-size: 12px;
+  line-height: 1;
+  transition: background .12s ease, border-color .12s ease, transform .08s ease;
+}
+
+.chip:hover{
+  background: rgba(255,255,255,.06);
+}
+
+.chip:active{
+  transform: translateY(1px);
+}
+
+.chip.active{
+  color: var(--text);
+  background: rgba(110,168,255,.16);
+  border-color: rgba(110,168,255,.55);
+}
