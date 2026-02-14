@@ -29,5 +29,24 @@
     <main class="container">
       {% block content %}{% endblock %}
     </main>
-  </body>
+  <script>
+// Make table rows clickable (data-href on tr.rowlink)
+document.addEventListener("click", function (e) {
+  const row = e.target.closest("tr.rowlink");
+  if (!row) return;
+
+  // Don’t hijack clicks meant for interactive elements
+  if (e.target.closest("a, button, input, select, textarea")) return;
+
+  const href = row.getAttribute("data-href");
+  if (!href) return;
+
+  if (e.metaKey || e.ctrlKey) {
+    window.open(href, "_blank", "noopener");
+  } else {
+    window.location.href = href;
+  }
+});
+</script>
+</body>
 </html>

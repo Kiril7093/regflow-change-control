@@ -30,7 +30,7 @@
         </thead>
         <tbody>
           {% for cr in change_requests %}
-            <tr>
+            <tr data-href="/change-requests/{{ cr.id }}/" class="rowlink">
               <td class="muted">CR#{{ cr.id }}</td>
               <td>
                 <a class="link-plain" href="/change-requests/{{ cr.id }}/">

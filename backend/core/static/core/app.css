@@ -239,3 +239,8 @@ a:hover{ text-decoration:underline; }
   .actions{ width:100%; }
   .btn{ width:auto; }
 }
+
+/* --- clickable table rows --- */
+tr.rowlink{ cursor: pointer; }
+tr.rowlink td{ transition: background .12s ease; }
+tr.rowlink:active td{ background: rgba(110,168,255,.06); }
