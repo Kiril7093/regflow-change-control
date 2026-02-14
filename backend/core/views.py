@@ -14,6 +14,7 @@ def home(request):
 @login_required
 def change_request_list(request):
     qs = ChangeRequest.objects.select_related("created_by").order_by("-created_at")
+    change_requests = ChangeRequest.objects.all().order_by("-updated_at", "-id")
     return render(request, "core/change_request_list.html", {"change_requests": qs})
 
 
