@@ -25,7 +25,7 @@ a{ color:var(--accent); text-decoration:none; }
 a:hover{ text-decoration:underline; }
 
 .container{
-  max-width: 1120px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 26px 18px 56px;
 }
@@ -41,7 +41,7 @@ a:hover{ text-decoration:underline; }
   background: rgba(10,15,32,.72);
   position: sticky;
   top:0;
-  backdrop-filter: blur(8px);
+backdrop-filter: blur(8px);
 }
 
 .nav .left{
@@ -245,12 +245,10 @@ tr.rowlink{ cursor: pointer; }
 tr.rowlink td{ transition: background .12s ease; }
 tr.rowlink:active td{ background: rgba(110,168,255,.06); }
 
-/* --- table polish: sticky header + zebra --- */
+/* --- table polish: header + zebra --- */
 .table thead th{
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  backdrop-filter: blur(8px);
+  background: rgba(10,15,32,.55);
+  box-shadow: 0 1px 0 rgba(34,48,92,.9);
 }
 
 .table tbody tr:nth-child(odd) td{
@@ -261,4 +259,8 @@ tr.rowlink:active td{ background: rgba(110,168,255,.06); }
 .nav a.btn.active{
   background: rgba(110,168,255,.18);
   border-color: rgba(110,168,255,.55);
+}
+
+@media (min-width: 1200px){
+  .container{ padding-left: 22px; padding-right: 22px; }
 }
