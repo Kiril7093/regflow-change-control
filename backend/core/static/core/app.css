@@ -256,3 +256,9 @@ tr.rowlink:active td{ background: rgba(110,168,255,.06); }
 .table tbody tr:nth-child(odd) td{
   background: rgba(255,255,255,.012);
 }
+
+/* --- active nav button --- */
+.nav a.btn.active{
+  background: rgba(110,168,255,.18);
+  border-color: rgba(110,168,255,.55);
+}

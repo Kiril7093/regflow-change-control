@@ -12,9 +12,9 @@
       <div class="left">
         <span class="brand">RegFlow</span>
         <span class="badge">Change Control MVP</span>
-        <a class="btn" href="/">Home</a>
-        <a class="btn" href="/change-requests/">Change Requests</a>
-        <a class="btn" href="/admin/">Admin</a>
+        <a class="btn{% if request.path == "/" %} active{% endif %}" href="/">Home</a>
+        <a class="btn{% if request.path|slice:":17" == "/change-requests/" %} active{% endif %}" href="/change-requests/">Change Requests</a>
+        <a class="btn{% if request.path|slice:":7" == "/admin/" %} active{% endif %}" href="/admin/">Admin</a>
       </div>
       <div class="right">
         {% if user.is_authenticated %}
