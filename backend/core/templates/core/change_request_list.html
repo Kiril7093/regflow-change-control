@@ -1,68 +1,29 @@
 {% extends "core/base.html" %}
 
-{% block title %}Change Requests · RegFlow
-<script>
-(function(){
-  const q = document.getElementById("cr-search");
-  const chips = Array.from(document.querySelectorAll(".chip"));
-  const rows = Array.from(document.querySelectorAll("tbody tr.rowlink"));
-
-  function norm(x){ return (x || "").toLowerCase(); }
-
-  function apply(){
-    const query = norm(q && q.value);
-    const active = document.querySelector(".chip.active");
-    const status = active ? norm(active.getAttribute("data-status")) : "all";
-
-    rows.forEach((tr) => {
-      const text = norm(tr.innerText);
-      // Status is in the pill cell; innerText contains it, so we can match it simply:
-      const statusOk = (status === "all") || text.includes(status);
-      const queryOk = (!query) || text.includes(query);
-      tr.style.display = (statusOk && queryOk) ? "" : "none";
-    });
-  }
-
-  if (q) {
-    q.addEventListener("input", apply);
-  }
-  chips.forEach((c) => {
-    c.addEventListener("click", () => {
-      chips.forEach(x => x.classList.remove("active"));
-      c.classList.add("active");
-      apply();
-    });
-  });
-
-  apply();
-})();
-</script>
-
-{% endblock %}
+{% block title %}Change Requests · RegFlow{% endblock %}
 
 {% block content %}
   <div class="header">
     <div>
       <h1 class="h1">Change Requests</h1>
       <div class="muted">Draft → In review → Approved / Rejected</div>
-
-      <div class="filters">
-        <input id="cr-search" class="input" type="search" placeholder="Search change requests…" autocomplete="off" />
-        <div class="chips" role="group" aria-label="Status filter">
-          <button class="chip active" data-status="all" type="button">All</button>
-          <button class="chip" data-status="draft" type="button">Draft</button>
-          <button class="chip" data-status="in review" type="button">In review</button>
-          <button class="chip" data-status="approved" type="button">Approved</button>
-          <button class="chip" data-status="rejected" type="button">Rejected</button>
-        </div>
-      </div>
-
     </div>
-
     <div class="actions">
       <a class="btn" href="/admin/">Admin</a>
       <a class="btn primary" href="/change-requests/new/">+ New change request</a>
     </div>
+  </div>
+
+  <div class="filters">
+    <input id="cr-search" class="input" type="search" placeholder="Search change requests…" autocomplete="off" />
+    <div class="chips" role="group" aria-label="Status filter">
+      <button class="chip active" data-status="all" type="button">All</button>
+      <button class="chip" data-status="draft" type="button">Draft</button>
+      <button class="chip" data-status="in_review" type="button">In review</button>
+      <button class="chip" data-status="approved" type="button">Approved</button>
+      <button class="chip" data-status="rejected" type="button">Rejected</button>
+    </div>
+    <span id="cr-count" class="count">Showing 0 / 0</span>
   </div>
 
   <div class="card card--table">
@@ -78,17 +39,20 @@
             <th class="col-updated">Updated</th>
           </tr>
         </thead>
+
         <tbody>
           {% for cr in change_requests %}
-            <tr data-href="/change-requests/{{ cr.id }}/" class="rowlink">
+            <tr data-href="/change-requests/{{ cr.id }}/" data-status="{{ cr.status }}" class="rowlink">
               <td class="muted">CR#{{ cr.id }}</td>
               <td>
                 <a class="link-plain" href="/change-requests/{{ cr.id }}/">
                   <strong>{{ cr.title }}</strong>
                 </a>
               </td>
-              <td class="muted">{{ cr.get_change_type_display }}</td>
-              <td><span class="status {{ cr.status }}">{{ cr.get_status_display }}</span></td>
+              <td class="muted">{{ cr.change_type }}</td>
+              <td>
+                <span class="status {{ cr.status }}">{{ cr.get_status_display }}</span>
+              </td>
               <td class="muted">{{ cr.created_by.username }}</td>
               <td class="muted">{{ cr.updated_at|date:"M j, Y g:i A" }}</td>
             </tr>
@@ -103,4 +67,54 @@
       </table>
     </div>
   </div>
+
+  <script>
+  (function(){
+    function init(){
+      const q = document.getElementById("cr-search");
+      const chips = Array.from(document.querySelectorAll(".chip"));
+      const rows = Array.from(document.querySelectorAll('tbody tr[data-href]'));
+      const counter = document.getElementById("cr-count");
+
+      const norm = (x) => (x || "").toLowerCase();
+
+      function apply(){
+        const query = norm(q && q.value);
+        const active = document.querySelector(".chip.active");
+        const wanted = active ? norm(active.dataset.status) : "all";
+
+        rows.forEach((tr) => {
+          const text = norm(tr.innerText);
+          const rowStatus = norm(tr.getAttribute("data-status"));
+        const okStatus = (wanted === "all") || (rowStatus === wanted);
+const okQuery = (!query) || text.includes(query);
+          tr.style.display = (okStatus && okQuery) ? "" : "none";
+        });
+
+        if (counter){
+          const total = rows.length;
+          const visible = rows.filter(tr => tr.style.display !== "none").length;
+          counter.textContent = `Showing ${visible} / ${total}`;
+        }
+      }
+
+      if (q) q.addEventListener("input", apply);
+      chips.forEach((c) => {
+        c.addEventListener("click", () => {
+          chips.forEach(x => x.classList.remove("active"));
+          c.classList.add("active");
+          apply();
+        });
+      });
+
+      apply();
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", init);
+    } else {
+      init();
+    }
+  })();
+  </script>
 {% endblock %}
